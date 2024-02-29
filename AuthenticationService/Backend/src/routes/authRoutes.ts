@@ -7,7 +7,7 @@ authRoutes.post('/login', async (c: Context)=> {
     return await loginUser(c);
 });
 
-authRoutes.post('/register', async (c: Context)=> {
+authRoutes.post('/signup', async (c: Context)=> {
     return await registerUser(c);
 });
 

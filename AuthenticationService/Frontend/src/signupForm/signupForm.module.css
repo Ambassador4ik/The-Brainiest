@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+
+
+.signupForm {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform : translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 25%;
+    max-width: 320px;
+    min-width: 250px;
+
+    padding: 20px;
+    border-radius: 10px;
+
+    background: #FFF;
+    box-shadow: 0px 0px 10px 0px rgba(126, 48, 225, 0.25);
+}
+
+
+.titleLabel {
+    color: #000000;
+
+    font-family: "Podkova", sans-serif;
+    font-size: 32px;
+
+    margin-bottom: 5px;
+}
+
+
+.loginEntry, .passwordEntry, .repeatPasswordEntry {
+    width: 95%;
+    height: 45px;
+    margin: 10px;
+
+    border-radius: 20px;
+    box-sizing: border-box;
+    border: 2px solid #7E30E1;
+
+    color: #8e758f;
+    background: #ffffff;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+}
+
+.loginEntry:focus, .passwordEntry:focus, .repeatPasswordEntry:focus {
+    border-color: #49108B;
+    outline: none;
+}
+
+
+.signupButton {
+    width: 95%;
+    height: 45px;
+    padding: 0;
+    margin: 20px 10px 0px 10px;
+
+    border-radius: 20px;
+
+    color: #ffffff;
+    background: #7e30e1;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+}
+.signupButton:hover {
+    background: #49108B;
+}
+
+
+.alreadyRegisteredLabel {
+    margin: 5px 0px 0px 0px;
+
+    font-size: 16px;
+    font-family: "Podkova", sans-serif;
+}
+
+
+.loginLabel {
+    color: #7e30e1;
+}
+
+.loginLabel:hover {
+    color: #49108B;
+}

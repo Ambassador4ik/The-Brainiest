@@ -1,5 +1,5 @@
-import {Context, Hono} from 'hono';
-import {loginUser, registerUser} from "../controllers/authController";
+import { Context, Hono } from 'hono';
+import { loginUser, registerUser } from "../controllers/authController";
 
 const authRoutes = new Hono();
 

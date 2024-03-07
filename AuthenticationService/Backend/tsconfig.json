@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"

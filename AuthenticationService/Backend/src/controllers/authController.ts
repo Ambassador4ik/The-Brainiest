@@ -1,5 +1,7 @@
+import 'dotenv/config'
 import { Context } from 'hono';
 import { PrismaClient, Prisma } from "@prisma/client";
+import { getAccessToken, getRefreshToken } from "../common/jwtWorkers";
 
 const prisma = new PrismaClient();
 
@@ -7,24 +9,32 @@ export const loginUser = async (c: Context) => {
     try {
         const body = await c.req.json()
 
-        const userLoad = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { username: body.username }
         });
 
-        if (!userLoad) {
-            return c.json({ 'Login': 'False', 'Error': 'User not found.' }, 404);
-        }
+        if (!user) return c.json({ message: 'User Not Found' }, 404);
 
-        const passwordValid = await Bun.password.verify(body.password, userLoad.hashed_password);
+        const passwordValid = await Bun.password.verify(body.password, user.hashed_password);
         if (passwordValid) {
-            c.status(200);
-            return c.json({ 'Login': 'True' });
+            const accessToken = await getAccessToken({id: user.id, username: user.username})
+            const refreshToken = await getRefreshToken({id: user.id, username: user.username})
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { refreshToken: refreshToken }
+            })
+
+            return c.json({
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            }, 200);
+
         } else {
-            return c.json({ 'Login': 'False', 'Error': 'Invalid password.' }, 401);
+            return c.json({ message: 'Invalid Password' }, 401);
         }
     } catch (error) {
         console.error(error);
-        return c.json({ 'Error': 'An error occurred during login.' }, 500);
+        return c.json({ message: 'An error occurred during login' }, 500);
     }
 };
 
@@ -42,19 +52,34 @@ export const registerUser = async (c: Context) => {
             data: {
                 username: body.username,
                 hashed_password: hashedPassword
+            },
+            select: {
+                id: true,
+                username: true,
             }
         });
 
-        c.status(201);
-        return c.json({ 'Register': 'True' });
+        const accessToken = await getAccessToken(newUser)
+        const refreshToken = await getRefreshToken(newUser)
+
+        await prisma.user.update({
+            where: { id: newUser.id },
+            data: { refreshToken: refreshToken }
+        })
+
+        return c.json({
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        }, 200);
+
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-            return c.json({ 'Register': 'False', 'Error': 'Username already exists.' }, 400);
+            return c.json({ message: 'Username already exists' }, 400);
         } else if (error instanceof Error) {
             console.error(error.message);
-            return c.json({ 'Error': 'An error occurred during registration.' }, 500);
+            return c.json({ message: 'An error occurred during registration' }, 500);
         }
         console.error('An unknown error occurred during registration.');
-        return c.json({ 'Error': 'An unknown error occurred during registration.' }, 500);
+        return c.json({ message: 'An unknown error occurred during registration' }, 500);
     }
 };

@@ -5,7 +5,10 @@
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "dotenv": "^16.4.5",
     "hono": "^4.0.7",
+    "jsonwebtoken": "^9.0.2",
     "kafka-node": "^5.0.0",
     "prisma": "^5.10.2"
   },

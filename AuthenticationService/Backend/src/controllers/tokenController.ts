@@ -1,10 +1,8 @@
 import { Context } from 'hono';
-import { PrismaClient } from "@prisma/client";
-
-import * as jwt from 'jsonwebtoken'
-
+import { PrismaClient } from '@prisma/client';
+import { verify, TokenExpiredError } from 'jsonwebtoken';
+import { getAccessToken, getRefreshToken } from '../common/jwtWorkers';
 import { accessPublicKey, refreshPublicKey } from '../common/environment'
-import { getAccessToken, getRefreshToken } from "../common/jwtWorkers";
 
 const prisma = new PrismaClient();
 
@@ -21,10 +19,10 @@ export const refreshTokens = async (c: Context) => {
         }
     })
 
-    if (!user) return c.json({ message: 'Invalid Refresh Token' }, 403);
+    if (!user) return c.json({ message: 'Invalid Refresh Token' }, 401);
 
     try {
-        const verified = jwt.verify(refreshToken, await refreshPublicKey, { algorithms: ['RS256'] });
+        const verified = verify(refreshToken, await refreshPublicKey, { algorithms: ['RS256'] });
         const accessToken = await getAccessToken(user);
         const newRefreshToken = await getRefreshToken(user)
 
@@ -48,9 +46,10 @@ export const verifyAccessToken = async (c: Context)=> {
     if (!accessToken) return c.json({ message: 'Access Denied' }, 401);
 
     try {
-        const verified = jwt.verify(accessToken, await accessPublicKey, { algorithms: ['RS256'] });
+        const verified = verify(accessToken, await accessPublicKey, { algorithms: ['RS256'] });
         return c.json({message: 'Authorised'}, 200)
     } catch (error) {
-        return c.json({ message: 'Invalid Token' }, 400);
+        if (error instanceof TokenExpiredError) return c.json({ message: 'Token Expired' }, 403);
+        return c.json({ message: 'Invalid Token' }, 401);
     }
 }

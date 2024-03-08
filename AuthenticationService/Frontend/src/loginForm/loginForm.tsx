@@ -1,61 +1,67 @@
-import styles from './loginForm.module.css'
-import React, {ChangeEvent, FormEvent} from "react";
+import React, {useCallback, useState} from 'react';
+import axios from 'axios';
+import {useCookies} from 'react-cookie';
+//import { useNavigate } from 'react-router-dom';
+import styles from './loginForm.module.css';
 
-import { getRequestOptions } from "../util/requestUtils.ts";
-import RequestType from "../util/requestType.ts";
-import ILoginFormState from "./ILoginFormState.ts"
+const LoginForm = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
+    //const navigate = useNavigate();
 
-class LoginForm extends React.Component<{}, ILoginFormState> {
-    constructor(props: {}) {
-        super(props);
+    const handleLoginChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value);
+    }, []);
 
-        this.state = {
-            username: '',
-            password: ''
-        };
+    const handlePasswordChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    }, []);
 
-        this.handleLoginChange = this.handleLoginChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleLoginChange(event: ChangeEvent<HTMLInputElement>) {
-        this.setState({ username: event.target.value });
-    }
-
-    handlePasswordChange(event: ChangeEvent<HTMLInputElement>) {
-        this.setState({ password: event.target.value });
-    }
-
-    handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        fetch('http://localhost:3000/auth/login', getRequestOptions(RequestType.POST, this.state))
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson && await response.json();
+        try {
+            const response = await axios.post('http://localhost:3000/auth/login', { username, password });
+            const {accessToken, refreshToken} = response.data;
+            setCookie('accessToken', accessToken, { path: '/' });
+            setCookie('refreshToken', refreshToken, { path: '/' });
+            window.location.href = 'http://localhost:3001/user/profile';
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('There was an error!', error.response?.data || error.message);
+            } else {
+                console.error('An unexpected error occurred', error);
+            }
+        }
+    };
 
-                if (!response.ok) {
-                    const error = (data && data.message) || response.status;
-                    return Promise.reject(error);
-                }
+    return (
+        <form className={styles.loginForm} onSubmit={handleSubmit}>
+            <div className={styles.titleLabel}>The Brainiest</div>
+            <input
+                className={styles.loginEntry}
+                onChange={handleLoginChange}
+                value={username}
+                type="text"
+                id="username"
+                placeholder="Логин"
+                aria-label="Логин"
+            />
+            <input
+                className={styles.passwordEntry}
+                onChange={handlePasswordChange}
+                value={password}
+                type="password"
+                id="password"
+                placeholder="Пароль"
+                aria-label="Пароль"
+            />
+            <button className={styles.loginButton} type="submit">Вход</button>
+            <p className={styles.noAccountLabel}>
+                Нет аккаунта? <a className={styles.signupLabel} href="/auth/signup">Регистрация</a>
+            </p>
+        </form>
+    );
+};
 
-                console.log(data)
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
-    }
-
-    render() {
-        return (
-            <form className={styles.loginForm} onSubmit={this.handleSubmit}>
-                <div className={styles.titleLabel}>The Brainiest</div>
-                <input className={styles.loginEntry} onChange={this.handleLoginChange} type="text" id="username" placeholder="Логин" aria-label="Логин"/>
-                <input className={styles.passwordEntry} onChange={this.handlePasswordChange} type="password" id="password" placeholder="Пароль" aria-label="Пароль"/>
-                <button className={styles.loginButton} type="submit">Вход</button>
-                <p className={styles.noAccountLabel}>Нет аккаунта? <a className={styles.signupLabel} href="/auth/signup">Регистрация</a></p>
-            </form>
-        )
-    }
-}
-export default LoginForm
+export default LoginForm;

@@ -1,4 +1,5 @@
 import { Kafka } from 'kafkajs';
+import initUserProfile from "../common/initUserProfile";
 
 const kafkaConfig = {
     clientId: 'auth-service',
@@ -16,7 +17,7 @@ async function runConsumer() {
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
             if (message.value) {
-
+                await initUserProfile(message.value.toString())
             }
         },
     })

@@ -1,0 +1,5 @@
+class GameModeFactory {
+    static createGameMode() {
+
+    }
+}

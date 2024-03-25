@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+
+.container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.title {
+    font-family: "Podkova", sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: #7E30E1;
+    padding: 0;
+    margin: 15px;
+}

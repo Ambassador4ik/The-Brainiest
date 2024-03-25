@@ -22,7 +22,7 @@ export const refreshTokens = async (c: Context) => {
     if (!user) return c.json({ message: 'Invalid Refresh Token' }, 401);
 
     try {
-        const verified = verify(refreshToken, await refreshPublicKey, { algorithms: ['RS256'] });
+        const verified = verify(refreshToken, refreshPublicKey, { algorithms: ['RS256'] });
         const accessToken = await getAccessToken(user);
         const newRefreshToken = await getRefreshToken(user)
 
@@ -46,7 +46,7 @@ export const verifyAccessToken = async (c: Context)=> {
     if (!accessToken) return c.json({ message: 'Access Denied' }, 401);
 
     try {
-        const verified = verify(accessToken, await accessPublicKey, { algorithms: ['RS256'] });
+        const verified = verify(accessToken, accessPublicKey, { algorithms: ['RS256'] });
         return c.json({message: 'Authorised'}, 200)
     } catch (error) {
         if (error instanceof TokenExpiredError) return c.json({ message: 'Token Expired' }, 403);

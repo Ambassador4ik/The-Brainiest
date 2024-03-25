@@ -2,6 +2,7 @@ import 'dotenv/config'
 import { Context } from 'hono';
 import { PrismaClient, Prisma } from "@prisma/client";
 import { getAccessToken, getRefreshToken } from "../common/jwtWorkers";
+import producer from "../kafka/kafkaProducer";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +16,7 @@ export const loginUser = async (c: Context) => {
 
         if (!user) return c.json({ message: 'User Not Found' }, 404);
 
-        const passwordValid = await Bun.password.verify(body.password, user.hashed_password);
+        const passwordValid = await Bun.password.verify(body.password, user.password);
         if (passwordValid) {
             const accessToken = await getAccessToken({id: user.id, username: user.username})
             const refreshToken = await getRefreshToken({id: user.id, username: user.username})
@@ -51,7 +52,7 @@ export const registerUser = async (c: Context) => {
         const newUser = await prisma.user.create({
             data: {
                 username: body.username,
-                hashed_password: hashedPassword
+                password: hashedPassword
             },
             select: {
                 id: true,
@@ -65,6 +66,11 @@ export const registerUser = async (c: Context) => {
         await prisma.user.update({
             where: { id: newUser.id },
             data: { refreshToken: refreshToken }
+        })
+
+        await producer.send({
+            topic: 'init-user',
+            messages: [{ value: JSON.stringify(newUser) }],
         })
 
         return c.json({

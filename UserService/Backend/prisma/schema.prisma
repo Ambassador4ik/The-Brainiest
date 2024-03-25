@@ -8,9 +8,9 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    Int     @id @unique
   username  String @unique
-  password String
-  refreshToken String? @unique
-  isProfileInitialised Boolean @default(false)
+  creation_date DateTime @default(now())
+  profile_picture String?
 }
+

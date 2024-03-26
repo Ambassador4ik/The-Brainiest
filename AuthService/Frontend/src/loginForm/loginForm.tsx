@@ -1,13 +1,14 @@
 import React, {useCallback, useState} from 'react';
 import axios from 'axios';
-import {useCookies} from 'react-cookie';
+//import {useCookies} from 'react-cookie';
 //import { useNavigate } from 'react-router-dom';
 import styles from './loginForm.module.css';
+import getDeviceIdentifier from "../common/deviceIdWorkers.ts";
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
+    //const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
     //const navigate = useNavigate();
 
     const handleLoginChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,11 +22,17 @@ const LoginForm = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', { username, password });
-            const {accessToken, refreshToken} = response.data;
-            setCookie('accessToken', accessToken, { path: '/' });
-            setCookie('refreshToken', refreshToken, { path: '/' });
-            window.location.href = 'http://localhost:3001/user/profile';
+            const deviceID = getDeviceIdentifier();
+            const response = await axios.post('http://localhost:3000/auth/login',
+                {
+                    username: username,
+                    password: password,
+                    deviceIdentifier: deviceID
+                }, {
+                    withCredentials: true
+                });
+            console.log(response.data);
+
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('There was an error!', error.response?.data || error.message);

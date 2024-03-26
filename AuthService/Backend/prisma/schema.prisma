@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int     @id @default(autoincrement())
+  username             String  @unique
+  password             String
+  isProfileInitialised Boolean @default(false)
+  // Relationships
+  refreshTokens        RefreshToken[]
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int      // Foreign key referencing the User model
+  user      User     @relation(fields: [userId], references: [id])
+  // Optional fields for better control and auditing
+  device    String   @unique  // Device name or identifier
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}

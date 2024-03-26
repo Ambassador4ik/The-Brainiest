@@ -21,8 +21,8 @@ const initUserProfile = async function (userJSON: string) {
         await producer.send({
             topic: 'user-profile-created',
             messages: [{value: JSON.stringify(newUser)}]
-        })
+        });
     }
 }
 
-export default initUserProfile
+export default initUserProfile;

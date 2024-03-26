@@ -3,20 +3,19 @@ import authRoutes from "./routes/authRoutes";
 import tokenRoutes from "./routes/tokenRoutes";
 import { cors } from "hono/cors";
 import runConsumer from "./kafka/kafkaConsumer";
-import { serve } from 'bun';
 
 const app = new Hono();
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true}));
 app.route('/auth', authRoutes);
 app.route('/token', tokenRoutes);
 
 const startServer = async () => {
     try {
         await runConsumer();
-        console.log('Kafka consumer initialized successfully.');
+        console.log('Kafka consumer initialized successfully');
 
-        serve({
+        Bun.serve({
             port: 3000,
             fetch: app.fetch,
         });

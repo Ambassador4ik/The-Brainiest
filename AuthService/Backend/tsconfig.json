@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "preserve",
+    "module": "esnext",
+    "moduleResolution": "nodenext",
     "strict": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"

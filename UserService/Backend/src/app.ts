@@ -13,7 +13,7 @@ app.route('/user', userProfileRoutes);
 const startServer = async () => {
     try {
         await runConsumer();
-        console.log('Kafka consumer initialized successfully.');
+        console.log('Kafka consumer initialized successfully');
 
         serve({
             port: 3001,

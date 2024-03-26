@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { verify, TokenExpiredError } from 'jsonwebtoken';
 import { getAccessToken, getRefreshToken } from '../common/jwtWorkers';
 import { accessPublicKey, refreshPublicKey } from '../common/environment'
+import {setCookie} from "hono/cookie";
 
 const prisma = new PrismaClient();
 
@@ -11,13 +12,20 @@ export const refreshTokens = async (c: Context) => {
 
     if (!refreshToken) return c.json({ message: 'Access Denied' }, 401);
 
-    const user = await prisma.user.findUnique({
-        where: { refreshToken: refreshToken },
+    const refreshTokenRecord = await prisma.refreshToken.findUnique({
+        where: { token: refreshToken },
         select: {
-            id: true,
-            username: true
+            user: {
+                select: {
+                    id: true,
+                    username: true
+                }
+            }
         }
-    })
+    });
+
+    // Extract the user from the refreshTokenRecord
+    const user = refreshTokenRecord ? refreshTokenRecord.user : null;
 
     if (!user) return c.json({ message: 'Invalid Refresh Token' }, 401);
 
@@ -26,12 +34,17 @@ export const refreshTokens = async (c: Context) => {
         const accessToken = await getAccessToken(user);
         const newRefreshToken = await getRefreshToken(user)
 
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { refreshToken: newRefreshToken }
+        await prisma.refreshToken.update({
+            where: {
+                token: refreshToken,
+            },
+            data: { token: newRefreshToken }
         })
 
+
+
         return c.json({
+            message: 'Tokens successfully refreshed.',
             accessToken: accessToken,
             refreshToken: newRefreshToken
         }, 200)

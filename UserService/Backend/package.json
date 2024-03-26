@@ -4,8 +4,10 @@
   },
   "dependencies": {
     "@prisma/client": "5.10.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "axios": "^1.6.7",
     "hono": "^4.0.8",
+    "jsonwebtoken": "^9.0.2",
     "kafkajs": "^2.2.4",
     "prisma": "^5.10.2",
     "prisma-client": "^0.0.0"

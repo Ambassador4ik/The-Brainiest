@@ -22,15 +22,32 @@ export const loginUser = async (c: Context) => {
             const accessToken = await getAccessToken({id: user.id, username: user.username})
             const refreshToken = await getRefreshToken({id: user.id, username: user.username})
 
-            await prisma.refreshToken.update({
+            const token = await prisma.refreshToken.findUnique({
                 where: {
-                    device: body.deviceIdentifier,
-                    userId: user.id
-                },
-                data: {
-                    token: refreshToken,
+                    device: body.deviceIdentifier
                 }
-            });
+            })
+
+            if (token) {
+                await prisma.refreshToken.update({
+                    where: {
+                        device: body.deviceIdentifier,
+                        userId: user.id
+                    },
+                    data: {
+                        token: refreshToken,
+                    }
+                });
+            } else {
+                await prisma.refreshToken.create({
+                    data: {
+                        userId: user.id,
+                        token: refreshToken,
+                        device: body.deviceIdentifier,
+                        expiresAt: new Date(new Date().setDate(new Date().getDate() + 30))
+                    }
+                });
+            }
 
             // Set refresh token as httpOnly cookie
             setCookie(c,'refreshToken', refreshToken, {

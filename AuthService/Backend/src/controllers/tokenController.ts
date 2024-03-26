@@ -66,3 +66,7 @@ export const verifyAccessToken = async (c: Context)=> {
         return c.json({ message: 'Invalid Token' }, 401);
     }
 }
+
+export const getPublicKey = async (c: Context) => {
+    return c.text(refreshPublicKey)
+}

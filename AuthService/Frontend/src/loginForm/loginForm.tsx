@@ -28,9 +28,11 @@ const LoginForm = () => {
                     username: username,
                     password: password,
                     deviceIdentifier: deviceID
-                }, {
+                },
+                {
                     withCredentials: true
                 });
+
             console.log(response.data);
 
         } catch (error) {

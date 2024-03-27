@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+.container {
+    margin-right: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.elementsContainer {
+    padding: 20px;
+    padding-bottom: 0;
+}
+.button {
+    width: 100%;
+    height: 45px;
+    padding: 0;
+    margin: 0 0px 0 10px;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+    background: #7e30e1;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+
+    border: none;
+}
+.button:hover {
+    background: #49108B;
+}
+.buttonContainer {
+    padding: 20px;
+    padding-right: 15px;
+    padding-top: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.title {
+    font-family: "Podkova", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: #7E30E1;
+    margin: 0 0 30px 15px;
+
+    text-decoration: none;
+}

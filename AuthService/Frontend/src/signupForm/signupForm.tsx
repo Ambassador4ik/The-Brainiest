@@ -34,6 +34,7 @@ const SignupForm = () => {
                 withCredentials: true
             });
             console.log(response.data);
+            window.location.href = 'http://localhost:5174/user/profile'
 
         } catch (error) {
             if (axios.isAxiosError(error)) {

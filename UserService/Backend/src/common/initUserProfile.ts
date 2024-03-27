@@ -11,7 +11,7 @@ const initUserProfile = async function (userJSON: string) {
             data: {
                 id: user.id,
                 username: user.username,
-                profile_picture: 'https://www.shutterstock.com/image-vector/question-mark-icon-vector-illustration-600nw-545832988.jpg'
+                profile_picture: 'https://abrakadabra.fun/uploads/posts/2021-12/thumbs/1639258975_25-abrakadabra-fun-p-znak-voprosa-na-chernom-fone-25.jpg'
             },
             select: {
                 id: true

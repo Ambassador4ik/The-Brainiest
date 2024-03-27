@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    padding: 0;
+    margin: 15px;
+    justify-content: space-between;
+}
+
+.name {
+    font-size: 20px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+    color: #000000;
+
+    white-space: nowrap;
+    margin: 0 12px 0 0;
+}
+
+.input {
+    border-radius: 30px;
+    height: 28px;
+
+    box-sizing: border-box;
+
+    accent-color: #7e30e1;
+    border: none;
+
+    color: #000000;
+    background: #ffffff;
+    font-size: 20px;
+    font-family: "Podkova", sans-serif;
+    padding: 0;
+    margin: 2px 2px 0;
+}

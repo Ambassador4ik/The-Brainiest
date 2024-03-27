@@ -9,7 +9,7 @@
     padding-right: 40px;
     width: 100%;
     flex-direction: row;
-    position: fixed;
+    position: sticky;
     box-sizing: border-box;
 }
 

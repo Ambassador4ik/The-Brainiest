@@ -8,8 +8,6 @@ import getDeviceIdentifier from "../common/deviceIdWorkers.ts";
 const LoginForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    //const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
-    //const navigate = useNavigate();
 
     const handleLoginChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
@@ -34,6 +32,8 @@ const LoginForm = () => {
                 });
 
             console.log(response.data);
+            window.location.href = 'http://localhost:5174/user/profile'
+
 
         } catch (error) {
             if (axios.isAxiosError(error)) {

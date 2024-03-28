@@ -1,0 +1,21 @@
+.container {
+    padding: 20px 20px 0px;
+}
+.title {
+    font-family: "Podkova", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: #7E30E1;
+    margin: 0 0 30px 15px;
+
+    text-decoration: none;
+}
+.content {
+    margin: 15px;
+    font-size: 20px;
+    text-align: justify;
+    font-family: "Podkova", sans-serif;
+    color: #000000;
+}

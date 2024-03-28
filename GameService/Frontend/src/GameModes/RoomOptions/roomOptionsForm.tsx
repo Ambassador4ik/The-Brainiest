@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import styles from './roomOptionsForm.module.css';
-import  {FormComponentData} from "./FormComponents/formComponent.ts";
-import FormComponentFactory from "./FormComponents/formComponentFactory.tsx";
+import  {FormComponentData} from "./Components/formComponent.ts";
+import FormComponentFactory from "./Components/formComponentFactory.tsx";
 
 const RoomOptionsForm = (config: {elements: FormComponentData[], onSubmit: (data: Record<string, string | number>) => void}) => {
     const [elementsData, setElementsData] = useState<FormComponentData[]>(config.elements)

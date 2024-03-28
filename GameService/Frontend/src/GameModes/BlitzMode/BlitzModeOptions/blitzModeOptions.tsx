@@ -1,5 +1,5 @@
 import RoomOptionsForm from "../../RoomOptions/roomOptionsForm.tsx";
-import { FormComponentData } from "../../RoomOptions/FormComponents/formComponent.ts";
+import { FormComponentData } from "../../RoomOptions/Components/formComponent.ts";
 import styles from './blitzModeOptions.module.css'
 
 const blitzModeOptions = () => {

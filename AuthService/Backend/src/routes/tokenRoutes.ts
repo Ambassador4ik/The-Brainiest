@@ -1,5 +1,5 @@
 import { Context, Hono } from 'hono';
-import {getPublicKey, refreshTokens, verifyAccessToken} from '../controllers/tokenController';
+import { getPublicKey, refreshTokens, verifyAccessToken } from '../controllers/tokenController';
 
 const tokenRoutes = new Hono();
 

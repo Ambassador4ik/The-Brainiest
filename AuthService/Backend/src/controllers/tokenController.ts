@@ -3,12 +3,11 @@ import { PrismaClient } from '@prisma/client';
 import { verify, TokenExpiredError } from 'jsonwebtoken';
 import { getAccessToken, getRefreshToken } from '../common/jwtWorkers';
 import { accessPublicKey, refreshPublicKey } from '../common/environment'
-import {setCookie} from "hono/cookie";
 
 const prisma = new PrismaClient();
 
 export const refreshTokens = async (c: Context) => {
-    const refreshToken = c.req.header('Authorization')?.split(' ')[1]
+    const refreshToken = c.req.header('Authorization')?.split(' ')[1];
 
     if (!refreshToken) return c.json({ message: 'Access Denied' }, 401);
 
@@ -32,16 +31,16 @@ export const refreshTokens = async (c: Context) => {
     try {
         const verified = verify(refreshToken, refreshPublicKey, { algorithms: ['RS256'] });
         const accessToken = await getAccessToken(user);
-        const newRefreshToken = await getRefreshToken(user)
+        const newRefreshToken = await getRefreshToken(user);
 
         await prisma.refreshToken.update({
             where: {
                 token: refreshToken,
             },
-            data: { token: newRefreshToken }
+            data: {
+                token: newRefreshToken
+            }
         })
-
-
 
         return c.json({
             message: 'Tokens successfully refreshed.',
@@ -54,13 +53,13 @@ export const refreshTokens = async (c: Context) => {
 }
 
 export const verifyAccessToken = async (c: Context)=> {
-    const accessToken = c.req.header('Authorization')?.split(' ')[1]
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
 
     if (!accessToken) return c.json({ message: 'Access Denied' }, 401);
 
     try {
         const verified = verify(accessToken, accessPublicKey, { algorithms: ['RS256'] });
-        return c.json({message: 'Authorised'}, 200)
+        return c.json({message: 'Authorised'}, 200);
     } catch (error) {
         if (error instanceof TokenExpiredError) return c.json({ message: 'Token Expired' }, 403);
         return c.json({ message: 'Invalid Token' }, 401);
@@ -68,5 +67,5 @@ export const verifyAccessToken = async (c: Context)=> {
 }
 
 export const getPublicKey = async (c: Context) => {
-    return c.text(refreshPublicKey)
+    return c.text(refreshPublicKey);
 }

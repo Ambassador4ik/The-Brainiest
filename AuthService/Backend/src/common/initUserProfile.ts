@@ -13,7 +13,7 @@ const initUserProfile = async function (userJSON: string) {
             data: {
                 isProfileInitialised: true
             }
-        })
+        });
     }
 }
 

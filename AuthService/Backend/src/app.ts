@@ -1,27 +1,35 @@
 import { Hono } from 'hono';
-import authRoutes from "./routes/authRoutes";
-import tokenRoutes from "./routes/tokenRoutes";
-import { cors } from "hono/cors";
-import runConsumer from "./kafka/kafkaConsumer";
+import logger from './common/logger';
+import { config } from './common/environment';
+import authRoutes from './routes/authRoutes';
+import tokenRoutes from './routes/tokenRoutes';
+import runConsumer from './kafka/kafkaConsumer';
+import corsMiddleware from './middleware/corsMiddleware';
+import errorMiddleware from './middleware/errorMiddleware';
 
 const app = new Hono();
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true}));
+app.use(corsMiddleware);
+app.use('*', errorMiddleware);
+
 app.route('/auth', authRoutes);
 app.route('/token', tokenRoutes);
+
+app.get('/health', (c) => c.text('OK'));
 
 const startServer = async () => {
     try {
         await runConsumer();
-        console.log('Kafka consumer initialized successfully');
+        logger.info('Kafka consumer initialized successfully');
 
         Bun.serve({
-            port: 3000,
+            port: config.port,
             fetch: app.fetch,
         });
-        console.log('Server running on port 3000');
+
+        logger.info(`Server listening on port ${config.port}`);
     } catch (error) {
-        console.error('Failed to initialize Kafka consumer:', error);
+        logger.error('Failed to initialize Kafka consumer:', error);
     }
 };
 

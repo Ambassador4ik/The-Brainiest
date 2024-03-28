@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import { Context } from 'hono';
-import { PrismaClient, Prisma } from "@prisma/client";
-import { getAccessToken, getRefreshToken } from "../common/jwtWorkers";
-import producer from "../kafka/kafkaProducer";
 import { setCookie } from 'hono/cookie'
+import producer from '../kafka/kafkaProducer';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { getAccessToken, getRefreshToken } from '../common/jwtWorkers';
 
 const prisma = new PrismaClient();
 
@@ -19,14 +19,14 @@ export const loginUser = async (c: Context) => {
 
         const passwordValid = await Bun.password.verify(body.password, user.password);
         if (passwordValid) {
-            const accessToken = await getAccessToken({id: user.id, username: user.username})
-            const refreshToken = await getRefreshToken({id: user.id, username: user.username})
+            const accessToken = await getAccessToken({id: user.id, username: user.username});
+            const refreshToken = await getRefreshToken({id: user.id, username: user.username});
 
             const token = await prisma.refreshToken.findUnique({
                 where: {
                     device: body.deviceIdentifier
                 }
-            })
+            });
 
             if (token) {
                 await prisma.refreshToken.update({
@@ -59,12 +59,12 @@ export const loginUser = async (c: Context) => {
                 domain: 'localhost',
             });
 
-            // Optionally, set access token as httpOnly cookie (or send it in response body for SPA usage)
+            // Set access token as httpOnly cookie
             setCookie(c, 'accessToken', accessToken, {
                 httpOnly: true,
                 //secure: true, // Ensure this is set to false if you're testing without HTTPS
                 path: '/',
-                maxAge: 60 * 60, // 1h
+                maxAge: 60 * 60, // 1 Hour
                 //sameSite: 'Strict',
                 domain: 'localhost',
             });
@@ -103,8 +103,8 @@ export const registerUser = async (c: Context) => {
             }
         });
 
-        const accessToken = await getAccessToken(newUser)
-        const refreshToken = await getRefreshToken(newUser)
+        const accessToken = await getAccessToken(newUser);
+        const refreshToken = await getRefreshToken(newUser);
 
         await prisma.refreshToken.create({
             data: {
@@ -118,7 +118,7 @@ export const registerUser = async (c: Context) => {
         await producer.send({
             topic: 'init-user',
             messages: [{ value: JSON.stringify(newUser) }],
-        })
+        });
 
         // Set refresh token as httpOnly cookie
         setCookie(c,'refreshToken', refreshToken, {

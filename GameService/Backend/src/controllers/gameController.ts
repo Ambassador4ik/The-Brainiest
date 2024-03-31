@@ -2,7 +2,7 @@ import {Context} from "hono";
 import {PrismaClient} from "@prisma/client";
 
 import {joinRoomById} from "./roomController";
-import {upgradeWebSocket, connections} from "../common/wsConfig";
+import {upgradeWebSocket, addToRoom, removeFromRoom, broadcast} from "../common/wsConfig";
 
 const prisma = new PrismaClient();
 
@@ -56,8 +56,8 @@ export const connect = upgradeWebSocket(async (c: Context) => {
             await joinRoomById(userId, roomId);
             const roomData = await getRoomById(roomId);
 
-            ws.send(JSON.stringify(roomData))
-            connections.add(ws)
+            broadcast(roomId, JSON.stringify(roomData))
+            addToRoom(roomId, ws)
         },
         async onMessage(event, ws) {
             const message = event.data;
@@ -67,9 +67,11 @@ export const connect = upgradeWebSocket(async (c: Context) => {
 
                 ws.send(JSON.stringify(roomData))
             }
-            connections.add(ws)
         },
-        onClose: () => {
+        async onClose(event, ws) {
+            removeFromRoom(roomId, ws);
+            const roomData = await getRoomById(roomId);
+            broadcast(roomId, JSON.stringify(roomData))
             console.log('Connection closed')
         },
     }

@@ -12,6 +12,13 @@
     font-size: 20px;
     text-align: center;
     font-family: "Podkova", sans-serif;
+
+    display: flex;
+    flex-direction: row;
+    place-content: space-between;
+    align-items: center;
+
+    padding: 5px;
 }
 
 .roomName {

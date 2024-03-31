@@ -1,71 +1,98 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+//import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
-interface Message {
-    // Define the structure of your message here. For demonstration:
-    text: string;
-}
-
-function useWebSocket(roomId: string) {
-    const [messages, setMessages] = useState<Message[]>([]);
-    const ws = useRef<WebSocket | null>(null);
-
-    useEffect(() => {
-        const wsUrl = `ws://localhost:3002/game/${roomId}`;
-        ws.current = new WebSocket(wsUrl);
-
-        ws.current.onopen = () => {
-            console.log('WebSocket Connected');
-        };
-
-        ws.current.onmessage = (event) => {
-            const message: Message = JSON.parse(event.data);
-            setMessages((prev) => [...prev, message]);
-        };
-
-        ws.current.onclose = () => {
-            console.log('WebSocket Disconnected');
-        };
-
-        return () => {
-            //ws.current?.close();
-        };
-    }, [roomId]);
-
-    const sendMessage = (message: Message) => {
-        if (ws.current?.readyState === WebSocket.OPEN) {
-            ws.current.send(JSON.stringify(message));
-        }
-    };
-
-    return { messages, sendMessage };
-}
-
-import React from 'react';
-
-interface GameComponentProps {
+interface Player {
+    id: number;
+    username: string;
+    games_played: number;
+    games_won: number;
     roomId: string;
 }
 
-const BlitzModeMainScreen : React.FC<GameComponentProps> = ({ roomId }) => {
-    const { messages, sendMessage } = useWebSocket(roomId);
-    const [input, setInput] = useState<string>('');
+interface RoomDetails {
+    id: string;
+    question_count: number;
+    time_per_question: number;
+    player_count: number;
+    name: string;
+    players: Player[];
+}
 
-    const handleSend = () => {
-        sendMessage({ text: input });
-        setInput('');
+interface RoomProps {
+    wsUrl: string;
+    roomId: string;
+}
+
+const Room: React.FC<RoomProps> = ({ wsUrl, roomId }) => {
+    const [room, setRoom] = useState<RoomDetails | null>(null);
+    //const navigate = useNavigate(); // Use the useNavigate hook to get the navigate function
+
+    useEffect(() => {
+        const ws = new WebSocket(wsUrl);
+
+        const closeWebSocket = () => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.close();
+                console.log('WebSocket connection closed');
+            }
+        };
+
+        ws.onopen = () => {
+            console.log('WebSocket connection established');
+            ws.send(JSON.stringify({ action: 'joinRoom', roomId }));
+        };
+
+        ws.onmessage = (event) => {
+            const data: RoomDetails = JSON.parse(event.data);
+            setRoom(data);
+        };
+
+        ws.onerror = (error: Event) => {
+            console.error('WebSocket error:', error);
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        window.addEventListener('beforeunload', closeWebSocket);
+
+        return () => {
+            closeWebSocket();
+            window.removeEventListener('beforeunload', closeWebSocket);
+        };
+    }, [wsUrl, roomId]);
+
+    // Function to handle disconnection and redirection
+    const leaveRoom = () => {
+        // Assuming your WebSocket close logic is correct and it notifies the server accordingly
+        const ws = new WebSocket(wsUrl);
+        ws.onopen = () => {
+            ws.send(JSON.stringify({ action: 'leaveRoom', roomId }));
+            ws.close();
+        };
+
+        console.log('Left Room') // Navigate to the root. Adjust the route as needed.
     };
+
+    if (!room) {
+        return <div>Loading room details...</div>;
+    }
 
     return (
         <div>
-            <input value={input} onChange={(e) => setInput(e.target.value)} />
-            <button onClick={handleSend}>Send</button>
-            <div>
-                {messages.map((msg, index) => (
-                    <div key={index}>{msg.text}</div>
+            <h2>{room.name}</h2>
+            <p>Question Count: {room.question_count}</p>
+            <p>Time Per Question: {room.time_per_question}s</p>
+            <p>Player Count: {room.player_count}</p>
+            <ul>
+                {room.players.map((player) => (
+                    <li key={player.id}>{player.username} (Games Won: {player.games_won})</li>
                 ))}
-            </div>
+            </ul>
+            <button onClick={leaveRoom}>Leave Room</button> {/* Add the Leave Room button */}
         </div>
     );
 };
 
-export default BlitzModeMainScreen;
+export default Room;

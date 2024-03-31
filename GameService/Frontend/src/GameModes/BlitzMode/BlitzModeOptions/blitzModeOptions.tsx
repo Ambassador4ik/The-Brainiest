@@ -1,6 +1,7 @@
 import RoomOptionsForm from "../../RoomOptions/roomOptionsForm.tsx";
 import { FormComponentData } from "../../RoomOptions/Components/formComponent.ts";
 import styles from './blitzModeOptions.module.css'
+import axios from "axios";
 
 const blitzModeOptions = () => {
     const elements: FormComponentData[] = [
@@ -13,7 +14,10 @@ const blitzModeOptions = () => {
         { label: 'Время на размышление (сек)', value: '5', name: 'time_per_question', type: 'range', min: 2, max: 15 },
     ]
 
-    const handleSubmit = (data: Record<string, string | number>) => {
+    const handleSubmit = async (data: Record<string, string | number>) => {
+        await axios.post('http://localhost:3002/room/create', data, {
+            withCredentials: true
+        })
         console.log("Form Data:", data);
     };
 

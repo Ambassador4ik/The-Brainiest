@@ -13,6 +13,25 @@ function generateId(length: number = 6): string {
     return id;
 }
 
+export const getAllRooms = async (c: Context) => {
+    try {
+        const rooms = await prisma.room.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    players: true,
+                    player_count: true
+                }
+            }
+        );
+
+        return c.json(rooms, 200)
+    } catch (err) {
+        console.log(err)
+        return c.json({message: "An error occured"}, 500)
+    }
+}
+
 export const createRoom = async (c: Context) => {
     // Expecting: room (name, question_count, time_per_question, player_count)
     const body = await c.req.json()
@@ -24,9 +43,9 @@ export const createRoom = async (c: Context) => {
             data: {
                 id: roomId,
                 name: body.room_name,
-                question_count: body.question_count,
-                time_per_question: body.time_per_question,
-                player_count: body.player_count
+                question_count: Number(body.question_count),
+                time_per_question: Number(body.time_per_question),
+                player_count: Number(body.player_count)
             }
         })
     } catch (err) {

@@ -11,7 +11,8 @@ model User {
   id                   Int     @id @default(autoincrement())
   username             String  @unique
   password             String
-  isProfileInitialised Boolean @default(false)
+  isUserProfileInitialised Boolean @default(false)
+  isGameProfileInitialised Boolean @default(false)
   // Relationships
   refreshTokens        RefreshToken[]
 }

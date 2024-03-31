@@ -26,7 +26,7 @@ const SignupForm = () => {
 
         try {
             const deviceID = getDeviceIdentifier();
-            const response = await axios.post('http://localhost:3000/auth/signup', {
+            const response = await axios.post('http://localhost:3000' + '/auth/signup', {
                 username: username,
                 password: password,
                 deviceIdentifier: deviceID

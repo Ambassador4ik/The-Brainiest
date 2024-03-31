@@ -1,14 +1,14 @@
 import { Kafka } from 'kafkajs';
-import initUserProfile from "../common/initUserProfile";
+import initUserProfile from "../common/initGameProfile";
 
 const kafkaConfig = {
-    clientId: 'user-service',
+    clientId: 'game-service',
     brokers: ['devdive.tech:9092'],
 };
 
 const kafka = new Kafka(kafkaConfig);
 
-const consumer = kafka.consumer({ groupId: 'user-service-group' });
+const consumer = kafka.consumer({ groupId: 'game-service-group' });
 
 await consumer.connect();
 await consumer.subscribe({ topic: 'init-user', fromBeginning: true });
@@ -16,7 +16,7 @@ await consumer.subscribe({ topic: 'init-user', fromBeginning: true });
 async function runConsumer() {
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
-            if (topic === 'init-user' && message.value) {
+            if (topic == 'init-user' && message.value) {
                 await initUserProfile(message.value.toString())
             }
         },

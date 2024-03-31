@@ -21,7 +21,7 @@ const LoginForm = () => {
         event.preventDefault();
         try {
             const deviceID = getDeviceIdentifier();
-            const response = await axios.post('http://localhost:3000/auth/login',
+            const response = await axios.post( 'http://localhost:3000' + '/auth/login',
                 {
                     username: username,
                     password: password,

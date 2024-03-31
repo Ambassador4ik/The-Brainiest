@@ -1,5 +1,5 @@
 import { config } from '../common/environment';
-import initUserProfile from '../common/initUserProfile';
+import {initUserProfile, initGameProfile} from '../common/initUserProfile';
 import logger, { pinoKafkaLogger } from '../common/logger';
 import { Kafka, KafkaJSNumberOfRetriesExceeded } from 'kafkajs';
 
@@ -26,12 +26,16 @@ try {
 }
 
 await consumer.subscribe({ topic: 'user-profile-created', fromBeginning: true });
+await consumer.subscribe({ topic: 'game-profile-created', fromBeginning: true });
 
 async function runConsumer() {
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
-            if (message.value) {
+            if (topic == 'user-profile-created' && message.value) {
                 await initUserProfile(message.value.toString())
+            }
+            if (topic == 'game-profile-created' && message.value) {
+                await initGameProfile(message.value.toString())
             }
         },
     });

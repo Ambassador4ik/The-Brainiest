@@ -2,6 +2,7 @@ import BlitzModeOptions from "./BlitzModeOptions/blitzModeOptions.tsx";
 import styles from './blitzMode.module.css'
 import NavigationBar from "../../NavigationBar/navigationBar.tsx";
 import BlitzModeRules from "./BlitzModeRules/blitzModeRules.tsx";
+import BlitzModeRooms from "./BlitzModeRooms/blitzModeRooms.tsx";
 
 const blitzMode = () => {
     return (
@@ -15,7 +16,7 @@ const blitzMode = () => {
                 </div>
                 <div className={styles.separator}></div>
                 <div className={styles.gameComponent}>
-
+                    <BlitzModeRooms />
                 </div>
                 <div className={styles.separator}></div>
                 <div className={styles.gameComponent}>

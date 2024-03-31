@@ -29,15 +29,41 @@ export const loginUser = async (c: Context) => {
             });
 
             if (token) {
-                await prisma.refreshToken.update({
+                console.log(body.deviceIdentifier)
+                console.log(token)
+                console.log(user.id)
+                const userTokenRecord = await prisma.refreshToken.findUnique({
                     where: {
                         device: body.deviceIdentifier,
                         userId: user.id
-                    },
-                    data: {
-                        token: refreshToken,
                     }
                 });
+
+                if (!userTokenRecord) {
+                    await prisma.refreshToken.delete({
+                        where: {
+                            device: body.deviceIdentifier
+                        }
+                    });
+                    await prisma.refreshToken.create({
+                        data: {
+                            userId: user.id,
+                            token: refreshToken,
+                            device: body.deviceIdentifier,
+                            expiresAt: new Date(new Date().setDate(new Date().getDate() + 30))
+                        }
+                    });
+                } else {
+                    await prisma.refreshToken.update({
+                        where: {
+                            device: body.deviceIdentifier,
+                            userId: user.id
+                        },
+                        data: {
+                            token: refreshToken,
+                        }
+                    });
+                }
             } else {
                 await prisma.refreshToken.create({
                     data: {

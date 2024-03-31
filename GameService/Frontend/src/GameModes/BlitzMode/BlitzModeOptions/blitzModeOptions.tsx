@@ -4,12 +4,13 @@ import styles from './blitzModeOptions.module.css'
 
 const blitzModeOptions = () => {
     const elements: FormComponentData[] = [
-        { label: 'Название комнаты:', value: '', name: 'room-name', type: 'input' },
-        { label: 'Игрок-ведущий', value: 0, name: 'player-host', type: 'checkbox' },
-        { label: 'Дополнительный конкурс', value: 0, name: 'additional-quiz', type: 'checkbox' },
-        { label: 'Дополнительные вопросы', value: 0, name: 'additional-questions', type: 'checkbox' },
-        { label: 'Количество вопросов', value: '18', name: 'question-count', type: 'range', min: 4, max: 24 },
-        { label: 'Время на размышление (сек)', value: '5', name: 'time-per-question', type: 'range', min: 2, max: 15 },
+        { label: 'Название комнаты:', value: '', name: 'room_name', type: 'input' },
+        //{ label: 'Игрок-ведущий', value: 0, name: 'player-host', type: 'checkbox' },
+        //{ label: 'Дополнительный конкурс', value: 0, name: 'additional-quiz', type: 'checkbox' },
+        //{ label: 'Дополнительные вопросы', value: 0, name: 'additional-questions', type: 'checkbox' },
+        { label: 'Количество игроков', value: '12', name: 'player_count', type: 'range', min: 1, max: 12 },
+        { label: 'Количество вопросов', value: '18', name: 'question_count', type: 'range', min: 4, max: 24 },
+        { label: 'Время на размышление (сек)', value: '5', name: 'time_per_question', type: 'range', min: 2, max: 15 },
     ]
 
     const handleSubmit = (data: Record<string, string | number>) => {

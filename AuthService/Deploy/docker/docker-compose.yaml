@@ -11,4 +11,23 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: production
+      BACKEND_PORT: "3001"
+      DATABASE_URL: "postgresql://root:FistingIs300@cloud-db.cl2scsc2sm9e.eu-north-1.rds.amazonaws.com:5432/authdb"
+      FRONTEND_URL: "http://localhost:8000"
+      KAFKA_BROKER: "devdive.tech:9092"
     command: ["run", "start"]
+
+  frontend:
+    build:
+      context: ../../Frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    ports:
+      - "8005:8005"
+    environment:
+      PROD_PORT: "8005"
+      BACKEND_URL: "http://localhost:3001"
+    depends_on:
+      - backend
+    command: ["run", "preview"]

@@ -1,0 +1,20 @@
+.container {
+    width: 95%;
+    height: 45px;
+    margin: 10px;
+
+    border-radius: 20px;
+    box-sizing: border-box;
+    border: 2px solid #7E30E1;
+
+    color: #8e758f;
+    background: #ffffff;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+}
+
+.roomName {
+
+}
+

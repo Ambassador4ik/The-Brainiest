@@ -9,5 +9,9 @@ export const refreshPrivateKey = await Bun.file("jwt_key2.pem").text();
 export const config = {
     origin: process.env.FRONTEND_URL ?? 'http://localhost',
     port: process.env.BACKEND_PORT ?? 3000,
-    kafkaBroker: process.env.KAFKA_BROKER ?? 'localhost:9092',
+    kafkaBrokers: [
+        process.env.KAFKA_BROKER_ONE ?? 'localhost:9092',
+        process.env.KAFKA_BROKER_TWO ?? 'localhost:9093',
+        process.env.KAFKA_BROKER_THREE ?? 'localhost:9094'
+    ],
 };

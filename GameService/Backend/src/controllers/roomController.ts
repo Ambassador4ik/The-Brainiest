@@ -98,3 +98,21 @@ export const joinRoomById = async (userId: number, roomId: string) => {
         return false
     }
 }
+
+export const leaveRoomById = async (userId: number) => {
+    try {
+        await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                roomId: null
+            }
+        })
+
+        return true
+    } catch (err) {
+        console.log(err)
+        return false
+    }
+}

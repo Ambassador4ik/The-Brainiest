@@ -29,9 +29,6 @@ export const loginUser = async (c: Context) => {
             });
 
             if (token) {
-                console.log(body.deviceIdentifier)
-                console.log(token)
-                console.log(user.id)
                 const userTokenRecord = await prisma.refreshToken.findUnique({
                     where: {
                         device: body.deviceIdentifier,

@@ -10,12 +10,14 @@ import {getRoomById} from "./controllers/gameController";
 
 
 import {upgradeWebSocket, websocket} from "./common/wsConfig";
+import statsRoutes from "./routes/statsRoutes";
 
 const app = new Hono();
-app.use(cors({origin: 'http://localhost:3030', credentials: true}));
+app.use(cors({origin: 'http://localhost', credentials: true}));
 
 app.route('/room', roomRoutes);
 app.route('/game', gameRoutes);
+app.route('/stats', statsRoutes);
 
 
 const startServer = async () => {

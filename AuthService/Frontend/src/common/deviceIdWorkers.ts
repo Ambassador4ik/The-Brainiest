@@ -2,6 +2,8 @@ const getDeviceIdentifier = () => {
     // Retrieve the existing identifier from local storage
     let deviceIdentifier = localStorage.getItem('deviceIdentifier');
 
+    deviceIdentifier = null
+
     if (!deviceIdentifier) {
         const userAgent = navigator.userAgent;
 

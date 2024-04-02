@@ -5,8 +5,8 @@ import { Kafka, KafkaJSNumberOfRetriesExceeded } from 'kafkajs';
 
 const kafkaConfig = {
     clientId: 'auth-service',
-    brokers: [config.kafkaBroker],
-    logCreator: pinoKafkaLogger
+    brokers: config.kafkaBrokers,
+    logCreator: pinoKafkaLogger,
 };
 
 const kafka = new Kafka(kafkaConfig);

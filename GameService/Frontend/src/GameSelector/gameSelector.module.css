@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
 
+.externalContainer {
+
+}
+
 .container {
     display: flex;
     justify-content: center; /* Center horizontally */

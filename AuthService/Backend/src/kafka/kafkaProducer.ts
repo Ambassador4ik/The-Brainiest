@@ -4,7 +4,7 @@ import { Kafka, KafkaJSNumberOfRetriesExceeded, Partitioners } from 'kafkajs';
 
 const kafkaConfig = {
     clientId: 'auth-service',
-    brokers: [config.kafkaBroker],
+    brokers: config.kafkaBrokers,
     logCreator: pinoKafkaLogger
 };
 

@@ -16,6 +16,7 @@ const blitzModeRooms = () => {
                 // Transform the data to include player count
                 // @ts-ignore
                 const roomsWithPlayerCount = response.data.map(room => ({
+                    id: room.id,
                     name: room.name,
                     maxPlayers: room.player_count,
                     playerCount: room.players.length,

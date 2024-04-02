@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+
+.container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.title {
+    color: #7E30E1;
+    text-align: center;
+    font-family: Podkova, sans-serif;
+    font-size: 120px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.loginButton {
+    width: 200px;
+    height: 63px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    border: 2px solid #7E30E1;
+    box-sizing: border-box;
+    background: #FFF;
+
+    color: #7E30E1;
+    text-align: center;
+    font-family: Podkova, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    margin-right: 15px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+}
+
+.signupButton {
+    border-radius: 20px;
+    background: #7E30E1;
+    width: 200px;
+    height: 63px;
+    flex-shrink: 0;
+
+    color: #FFF;
+    text-align: center;
+    font-family: Podkova, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    border: none;
+
+    margin-left: 15px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+}

@@ -34,11 +34,11 @@ const navigationBar = () => {
     return (
         <nav className={styles.container}>
             <div className={styles.barContent}>
-                <a className={styles.logo} href='#'>The Brainiest</a>
+                <a className={styles.logo} href='/'>The Brainiest</a>
                 <div className={styles.navigationItems}>
-                    <a className={styles.navigationItem} href='#'>Рейтинги</a>
-                    <a className={styles.navigationItem} href='#'>Правила</a>
-                    <a className={styles.navigationItem} href='#'>Об Игре</a>
+                    <a className={styles.navigationItem} href='/game/'>Играть</a>
+                    <a className={styles.navigationItem} href='/ratings/'>Рейтинги</a>
+                    <a className={styles.navigationItem} href='/about/'>Об Игре</a>
                 </div>
                 <div className={styles.userInfo}>
                     <p className={styles.username}>{data?.username}</p>

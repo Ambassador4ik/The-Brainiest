@@ -32,7 +32,7 @@ const LoginForm = () => {
                 });
 
             console.log(response.data);
-            window.location.href = 'http://localhost:5174/user/profile'
+            window.location.href = '/user/profile'
 
 
         } catch (error) {

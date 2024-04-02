@@ -3,7 +3,7 @@ import initUserProfile from "../common/initGameProfile";
 
 const kafkaConfig = {
     clientId: 'game-service',
-    brokers: ['devdive.tech:9092'],
+    brokers: ['localhost:9092'],
 };
 
 const kafka = new Kafka(kafkaConfig);

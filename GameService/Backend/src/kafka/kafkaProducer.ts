@@ -2,7 +2,7 @@ import { Kafka, Partitioners } from 'kafkajs';
 
 const kafkaConfig = {
     clientId: 'user-service',
-    brokers: ['devdive.tech:9092'],
+    brokers: ['localhost:9092'],
 };
 
 const kafka = new Kafka(kafkaConfig);

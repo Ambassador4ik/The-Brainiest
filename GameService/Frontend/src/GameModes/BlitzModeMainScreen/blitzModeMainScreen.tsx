@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-//import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface Player {
     id: number;
@@ -20,15 +20,22 @@ interface RoomDetails {
 
 interface RoomProps {
     wsUrl: string;
-    roomId: string;
 }
 
-const Room: React.FC<RoomProps> = ({ wsUrl, roomId }) => {
+type WebSocketMessage = {
+    topic: 'roomUpdate' | 'gameStart'
+    content: any
+}
+
+const Room: React.FC<RoomProps> = ({ wsUrl }) => {
     const [room, setRoom] = useState<RoomDetails | null>(null);
-    //const navigate = useNavigate(); // Use the useNavigate hook to get the navigate function
+    const navigate = useNavigate();
+    const { roomId } = useParams<{ roomId: string }>();
 
     useEffect(() => {
-        const ws = new WebSocket(wsUrl);
+        if (!roomId) return;
+
+        const ws = new WebSocket(wsUrl + roomId);
 
         const closeWebSocket = () => {
             if (ws.readyState === WebSocket.OPEN) {
@@ -43,8 +50,13 @@ const Room: React.FC<RoomProps> = ({ wsUrl, roomId }) => {
         };
 
         ws.onmessage = (event) => {
-            const data: RoomDetails = JSON.parse(event.data);
-            setRoom(data);
+            const data: WebSocketMessage = JSON.parse(event.data);
+            if (data.topic === 'roomUpdate') {
+                const roomData: RoomDetails = data.content;
+                setRoom(roomData);
+            } else if (data.topic === 'gameStart') {
+                console.log('Game To Be Started')
+            }
         };
 
         ws.onerror = (error: Event) => {
@@ -63,16 +75,8 @@ const Room: React.FC<RoomProps> = ({ wsUrl, roomId }) => {
         };
     }, [wsUrl, roomId]);
 
-    // Function to handle disconnection and redirection
     const leaveRoom = () => {
-        // Assuming your WebSocket close logic is correct and it notifies the server accordingly
-        const ws = new WebSocket(wsUrl);
-        ws.onopen = () => {
-            ws.send(JSON.stringify({ action: 'leaveRoom', roomId }));
-            ws.close();
-        };
-
-        console.log('Left Room') // Navigate to the root. Adjust the route as needed.
+        navigate('/game/');
     };
 
     if (!room) {
@@ -90,7 +94,7 @@ const Room: React.FC<RoomProps> = ({ wsUrl, roomId }) => {
                     <li key={player.id}>{player.username} (Games Won: {player.games_won})</li>
                 ))}
             </ul>
-            <button onClick={leaveRoom}>Leave Room</button> {/* Add the Leave Room button */}
+            <button onClick={leaveRoom}>Leave Room</button>
         </div>
     );
 };

@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+
+.roomContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+
+    border-radius: 8px;
+}
+
+.header {
+    color: #7e30e1;
+    font-size: 40px;
+    text-align: center;
+    font-family: "Podkova", sans-serif;
+    margin: 0;
+}
+
+.stats {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    font-family: "Podkova", sans-serif;
+}
+
+.playersList {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    font-family: "Podkova", sans-serif;
+}
+
+.player {
+    font-family: "Podkova", sans-serif;
+    margin: 10px;
+}
+
+.questionContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Podkova", sans-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.cont {
+    padding-inline-start: 0
+}
+
+.optionButton {
+    margin: 5px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #7e30e1;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+
+    font-family: "Podkova", sans-serif;
+    min-width: 100px;
+}
+
+.optionButton:hover {
+    background-color: #0056b3;
+}
+
+.leaveButton {
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    font-family: "Podkova", sans-serif;
+}
+
+.leaveButton:hover {
+    background-color: #c82333;
+    font-family: "Podkova", sans-serif;
+}

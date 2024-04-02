@@ -15,8 +15,8 @@ const ratingsPage: React.FC = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const gamesPlayedResponse = await axios.get<PlayerStats[]>('http://localhost:3002/stats/games');
-                const gamesWonResponse = await axios.get<PlayerStats[]>('http://localhost:3002/stats/wins');
+                const gamesPlayedResponse = await axios.get<PlayerStats[]>('http://localhost:3002/stats/games', {withCredentials: true});
+                const gamesWonResponse = await axios.get<PlayerStats[]>('http://localhost:3002/stats/wins', {withCredentials: true});
                 setGamesPlayed(gamesPlayedResponse.data);
                 setGamesWon(gamesWonResponse.data);
             } catch (error) {

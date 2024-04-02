@@ -2,14 +2,7 @@ import {Context} from "hono";
 import {PrismaClient} from "@prisma/client";
 
 import {joinRoomById, leaveRoomById} from "./roomController";
-import {
-    upgradeWebSocket,
-    addToRoom,
-    removeFromRoom,
-    broadcast,
-    roomConnections,
-    userConnections, listConnectionsByRoom
-} from "../common/wsConfig";
+import {addToRoom, broadcast, listConnectionsByRoom, removeFromRoom, upgradeWebSocket} from "../common/wsConfig";
 import {BlitzGame, MockBlitzGame} from "../logic/blitzGame";
 
 const prisma = new PrismaClient();
@@ -51,7 +44,7 @@ export const getRoomById = async (roomId: string) => {
 }
 
 type WSRequest = {
-    type: 'getRoomData' | 'getUsers'
+    topic: 'nextQuestion'
     data: {}
 }
 
@@ -82,15 +75,17 @@ export const connect = upgradeWebSocket(async (c: Context) => {
                     content: 'The Game is to be started.'
                 })
                 game = MockBlitzGame(listConnectionsByRoom(roomId), roomData!.player_count);
+                return setInterval(() => game!.next(), 5000)
             }
 
             //console.log(roomConnections)
         },
         async onMessage(event, ws) {
             const message = event.data;
-            //const request: WSRequest = JSON.parse(message.toString())
-
-            game!.next();
+            const request: WSRequest = JSON.parse(message.toString())
+            if (request.topic == 'nextQuestion') {
+                game!.next();
+            }
         },
         async onClose(event, ws) {
             removeFromRoom(roomId, userId);

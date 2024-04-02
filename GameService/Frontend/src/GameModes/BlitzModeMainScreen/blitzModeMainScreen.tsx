@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from './blitzModeMainScreen.module.css'
 import { useParams, useNavigate } from 'react-router-dom';
 
 interface Player {
@@ -18,17 +19,27 @@ interface RoomDetails {
     players: Player[];
 }
 
+interface Question {
+    title: string;
+    options: {
+        text: string;
+        isCorrect: boolean;
+    }[];
+}
+
 interface RoomProps {
     wsUrl: string;
 }
 
 type WebSocketMessage = {
-    topic: 'roomUpdate' | 'gameStart'
-    content: any
+    topic: 'roomUpdate' | 'gameStart' | 'newQuestion';
+    content: any;
 }
 
 const Room: React.FC<RoomProps> = ({ wsUrl }) => {
     const [room, setRoom] = useState<RoomDetails | null>(null);
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+    const [userAnswer, setUserAnswer] = useState<{ selectedOption: string; isCorrect: boolean } | null>(null);
     const navigate = useNavigate();
     const { roomId } = useParams<{ roomId: string }>();
 
@@ -51,11 +62,17 @@ const Room: React.FC<RoomProps> = ({ wsUrl }) => {
 
         ws.onmessage = (event) => {
             const data: WebSocketMessage = JSON.parse(event.data);
-            if (data.topic === 'roomUpdate') {
-                const roomData: RoomDetails = data.content;
-                setRoom(roomData);
-            } else if (data.topic === 'gameStart') {
-                console.log('Game To Be Started')
+            switch (data.topic) {
+                case 'roomUpdate':
+                    setRoom(data.content as RoomDetails);
+                    break;
+                case 'gameStart':
+                    console.log('Game started');
+                    break;
+                case 'newQuestion':
+                    setCurrentQuestion(data.content);
+                    setUserAnswer(null); // Reset the answer state with new question
+                    break;
             }
         };
 
@@ -75,6 +92,15 @@ const Room: React.FC<RoomProps> = ({ wsUrl }) => {
         };
     }, [wsUrl, roomId]);
 
+    const handleOptionClick = (optionIndex: number) => {
+        if (currentQuestion) {
+            const isCorrect = currentQuestion.options[optionIndex].isCorrect;
+            const selectedOption = currentQuestion.options[optionIndex].text;
+            setUserAnswer({ selectedOption, isCorrect });
+
+        }
+    };
+
     const leaveRoom = () => {
         navigate('/game/');
     };
@@ -84,17 +110,34 @@ const Room: React.FC<RoomProps> = ({ wsUrl }) => {
     }
 
     return (
-        <div>
-            <h2>{room.name}</h2>
-            <p>Question Count: {room.question_count}</p>
-            <p>Time Per Question: {room.time_per_question}s</p>
-            <p>Player Count: {room.player_count}</p>
-            <ul>
-                {room.players.map((player) => (
-                    <li key={player.id}>{player.username} (Games Won: {player.games_won})</li>
+        <div className={styles.roomContainer}>
+            <h2 className={styles.header}>{room.name}</h2>
+            <p className={styles.stats}>Player Count: {room.player_count}</p>
+            <ul className={styles.playersList}>
+                {room.players.map(player => (
+                    <li key={player.id} className={styles.player}>{player.username} (Games Won: {player.games_won})</li>
                 ))}
             </ul>
-            <button onClick={leaveRoom}>Leave Room</button>
+            {currentQuestion && (
+                <div className={styles.questionContainer}>
+                    <h3>{currentQuestion.title}</h3>
+                    <ul className={styles.cont}>
+                        {currentQuestion.options.map((option, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handleOptionClick(index)}
+                                className={styles.optionButton}
+                            >
+                                {option.text}
+                            </button>
+                        ))}
+                    </ul>
+                    {userAnswer && (
+                        <p>{userAnswer.isCorrect ? 'Correct!' : 'Incorrect.'}</p>
+                    )}
+                </div>
+            )}
+            <button onClick={leaveRoom} className={styles.leaveButton}>Leave Room</button>
         </div>
     );
 };

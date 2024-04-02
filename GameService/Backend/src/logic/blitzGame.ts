@@ -21,6 +21,9 @@ export class BlitzGame {
         this.currentPlayer = 0;
         this.currentQuestionCount = -1;
         this.currentQuestion = this.questions.dequeue()!;
+
+        console.log(this)
+
     }
 
     markCorrect() : void {
@@ -42,12 +45,13 @@ export class BlitzGame {
         } catch {
             throw Error("Not enough questions in pack!");
         }
-        if (this.currentQuestionCount > this.QUESTIONS_PER_PLAYER) {
+        if (this.currentQuestionCount == this.QUESTIONS_PER_PLAYER) {
             this.nextPlayer();
         }
 
+        console.log(`Trying to send to: ${this.currentPlayer} which is ${this.players[this.currentPlayer]}`)
         this.players[this.currentPlayer].connection.send(JSON.stringify({
-            type: 'newQuestion',
+            topic: 'newQuestion',
             content: this.currentQuestion
         }))
 
@@ -66,11 +70,17 @@ export const MockBlitzGame = (playerConnections: {connection: WSContext, userId:
                 {text: 'C', isCorrect: false},
                 {text: 'D', isCorrect: false},
             ]),
-            new Question("Choose a letter2?", [
-                {text: 'A', isCorrect: true},
-                {text: 'B', isCorrect: false},
-                {text: 'C', isCorrect: false},
-                {text: 'D', isCorrect: false},
+            new Question("Good Question?", [
+                {text: 'Yea', isCorrect: true},
+                {text: 'Not Sure', isCorrect: false},
+                {text: 'Definitely not', isCorrect: false},
+                {text: 'Whatever', isCorrect: false},
+            ]),
+            new Question("Where is Russia?", [
+                {text: 'Africa', isCorrect: true},
+                {text: 'Eurasia', isCorrect: false},
+                {text: 'Antarctica', isCorrect: false},
+                {text: 'America', isCorrect: false},
             ]),
             new Question("Choose a letter3?", [
                 {text: 'A', isCorrect: true},
@@ -79,6 +89,30 @@ export const MockBlitzGame = (playerConnections: {connection: WSContext, userId:
                 {text: 'D', isCorrect: false},
             ]),
             new Question("Choose a letter4?", [
+                {text: 'A', isCorrect: true},
+                {text: 'B', isCorrect: false},
+                {text: 'C', isCorrect: false},
+                {text: 'D', isCorrect: false},
+            ]),
+            new Question("Choose a letter5?", [
+                {text: 'A', isCorrect: true},
+                {text: 'B', isCorrect: false},
+                {text: 'C', isCorrect: false},
+                {text: 'D', isCorrect: false},
+            ]),
+            new Question("Choose a letter6?", [
+                {text: 'A', isCorrect: true},
+                {text: 'B', isCorrect: false},
+                {text: 'C', isCorrect: false},
+                {text: 'D', isCorrect: false},
+            ]),
+            new Question("Choose a letter7?", [
+                {text: 'A', isCorrect: true},
+                {text: 'B', isCorrect: false},
+                {text: 'C', isCorrect: false},
+                {text: 'D', isCorrect: false},
+            ]),
+            new Question("Choose a letter8?", [
                 {text: 'A', isCorrect: true},
                 {text: 'B', isCorrect: false},
                 {text: 'C', isCorrect: false},
